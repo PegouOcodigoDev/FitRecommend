@@ -211,21 +211,13 @@ ou quando não há treinos locais disponíveis.
 
 A pasta `/docs` contém documentação detalhada:
 
-### architecture.md
-- Visão geral da arquitetura MVC
-- Explicação detalhada de cada padrão implementado
-- Fluxos de execução
-- Princípios SOLID aplicados
-- Camadas da aplicação
-- Pontos de extensão
-
 ### adr_decisions.md
 - ADR-001: Strategy Pattern para Recomendações
 - ADR-002: Adapter Pattern para APIs Externas
 - ADR-003: Repository Pattern
 - ADR-004: Django como Framework
 - ADR-005: MVC Adaptado
-- ADR-006: SQLite como Banco
+- ADR-006: postgres como Banco
 - ADR-007: Strategy Factory
 
 ## 🔍 Rotas Principais
@@ -258,8 +250,3 @@ A pasta `/docs` contém documentação detalhada:
 ## 👨‍💻 Autor
 
 Eduardo Lima - eduardojunior010757@gmail.com
-
-Para dúvidas sobre a arquitetura, consulte:
-1. `/docs/adr_decisions.md` - Architecture Decision Records
-2. Código fonte com docstrings padronizadas em português
-3. README.md - Este arquivo
