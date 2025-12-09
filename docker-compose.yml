@@ -1,0 +1,54 @@
+name: workout-app
+
+services:
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=fitrecommend
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=workout_project.settings
+      - DB_HOST=db
+      - DB_NAME=fitrecommend
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web-init:
+    build: .
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py seed_data"
+    volumes:
+      - .:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=workout_project.settings
+      - DB_HOST=db
+      - DB_NAME=fitrecommend
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+
