@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ workout.nome }} - FitRecommend{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-trophy-fill"></i> {{ workout.nome }}</h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Detalhes do Treino</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Descrição</h6>
+                <p class="mb-4">{{ workout.descricao }}</p>
+                
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <h6 class="text-muted small">Intensidade</h6>
+                        {% if workout.intensidade == 'baixa' %}
+                            <span class="badge bg-success fs-6">
+                                <i class="bi bi-speedometer"></i> {{ workout.get_intensidade_display }}
+                            </span>
+                        {% elif workout.intensidade == 'media' %}
+                            <span class="badge bg-warning fs-6">
+                                <i class="bi bi-speedometer2"></i> {{ workout.get_intensidade_display }}
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger fs-6">
+                                <i class="bi bi-lightning-fill"></i> {{ workout.get_intensidade_display }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <h6 class="text-muted small">Duração</h6>
+                        <p class="mb-0 fs-5">
+                            <i class="bi bi-clock text-primary"></i> {{ workout.duracao_minutos }} minutos
+                        </p>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <h6 class="text-muted small">Calorias Estimadas</h6>
+                        <p class="mb-0 fs-5">
+                            <i class="bi bi-fire text-danger"></i> {{ workout.calorias_estimadas }} kcal
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-graph-up"></i> Estatísticas</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6 class="text-muted small">Calorias por Minuto</h6>
+                    <p class="mb-0 fs-5">
+                        {% widthratio workout.calorias_estimadas workout.duracao_minutos 1 %} kcal/min
+                    </p>
+                </div>
+                
+                <div class="mb-3">
+                    <h6 class="text-muted small">Cadastrado em</h6>
+                    <p class="mb-0">{{ workout.criado_em|date:"d/m/Y H:i" }}</p>
+                </div>
+                
+                <div class="alert alert-light border mt-3" role="alert">
+                    <small>
+                        <strong>Dica:</strong> Este treino é ideal para quem busca 
+                        {% if workout.intensidade == 'baixa' %}
+                            iniciar ou manter uma rotina leve de exercícios.
+                        {% elif workout.intensidade == 'media' %}
+                            um equilíbrio entre desafio e recuperação.
+                        {% else %}
+                            máximo desempenho e resultados rápidos.
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <a href="{% url 'recommendation:workout_list' %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Voltar para Lista
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
