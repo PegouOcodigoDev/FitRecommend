@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Meu Perfil - FitRecommend{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h1><i class="bi bi-person-circle"></i> Meu Perfil</h1>
+    <div class="d-flex gap-2">
+        <a href="{% url 'recommendation:profile_edit' %}" class="btn btn-primary">
+            <i class="bi bi-pencil"></i> Editar
+        </a>
+        <a href="{% url 'recommendation:delete_account' %}" class="btn btn-outline-danger">
+            <i class="bi bi-trash"></i> Excluir Conta
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-person-badge"></i> Informações Pessoais</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <th width="40%"><i class="bi bi-person"></i> Nome:</th>
+                            <td>{{ user.nome }}</td>
+                        </tr>
+                        <tr>
+                            <th><i class="bi bi-envelope"></i> Email:</th>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                        <tr>
+                            <th><i class="bi bi-calendar"></i> Idade:</th>
+                            <td>{{ user.idade }} anos</td>
+                        </tr>
+                        <tr>
+                            <th><i class="bi bi-speedometer"></i> Peso:</th>
+                            <td>{{ user.peso }} kg</td>
+                        </tr>
+                        <tr>
+                            <th><i class="bi bi-rulers"></i> Altura:</th>
+                            <td>{{ user.altura }} cm</td>
+                        </tr>
+                        <tr>
+                            <th><i class="bi bi-clock"></i> Cadastrado em:</th>
+                            <td>{{ user.criado_em|date:"d/m/Y H:i" }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-bullseye"></i> Objetivos e Nível</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h6 class="text-muted mb-2">Objetivo</h6>
+                    <span class="badge bg-info fs-6">
+                        <i class="bi bi-flag-fill"></i> {{ user.get_objetivo_display }}
+                    </span>
+                </div>
+                
+                <div class="mb-4">
+                    <h6 class="text-muted mb-2">Nível de Experiência</h6>
+                    <span class="badge bg-success fs-6">
+                        <i class="bi bi-bar-chart-fill"></i> {{ user.get_nivel_display }}
+                    </span>
+                </div>
+                
+                <div class="alert alert-light border" role="alert">
+                    <strong>IMC Calculado:</strong> 
+                    {% widthratio user.peso 1 10000 as peso_g %}
+                    {% widthratio peso_g user.altura 1 as imc_x100 %}
+                    {% widthratio imc_x100 user.altura 1 as imc %}
+                    {{ imc|floatformat:1 }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if has_preferences %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-gear-fill"></i> Preferências</h5>
+                    <a href="{% url 'recommendation:preferences_edit' %}" class="btn btn-sm btn-light">
+                        <i class="bi bi-pencil"></i> Editar
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <h6 class="text-muted small">Frequência de Treino</h6>
+                        <p class="mb-0 fs-5">
+                            <i class="bi bi-calendar-week"></i> 
+                            {{ user.preferencias.frequencia_treino_semana }}x por semana
+                        </p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <h6 class="text-muted small">Tipo de Treino</h6>
+                        <p class="mb-0">
+                            <span class="badge bg-primary">
+                                {{ user.preferencias.get_tipo_treino_preferido_display }}
+                            </span>
+                        </p>
+                    </div>
+                    {% if user.preferencias.horario_preferido %}
+                    <div class="col-md-3 mb-3">
+                        <h6 class="text-muted small">Horário Preferido</h6>
+                        <p class="mb-0">
+                            <i class="bi bi-clock"></i> {{ user.preferencias.horario_preferido }}
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>Preferências não configuradas.</strong>
+            <a href="{% url 'recommendation:preferences_create' %}" class="alert-link">Clique aqui para configurar</a>.
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title mb-4">Ações Rápidas</h5>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{% url 'recommendation:home' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-speedometer2"></i> Ver Dashboard
+                    </a>
+                    <a href="{% url 'recommendation:history' %}" class="btn btn-info btn-lg">
+                        <i class="bi bi-clock-history"></i> Ver Histórico
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
