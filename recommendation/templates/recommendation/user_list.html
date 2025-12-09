@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Usuários - FitRecommend{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h1><i class="bi bi-people-fill"></i> Usuários do Sistema</h1>
+    <a href="{% url 'recommendation:user_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Novo Usuário
+    </a>
+</div>
+
+<div class="row">
+    {% for user in users %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-start mb-3">
+                    <div class="bg-primary bg-gradient rounded-circle p-3 me-3">
+                        <i class="bi bi-person-fill text-white fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="card-title mb-1">{{ user.nome }}</h5>
+                        <p class="text-muted small mb-0">
+                            <i class="bi bi-envelope"></i> {{ user.email }}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">
+                            <i class="bi bi-calendar"></i> {{ user.idade }} anos
+                        </span>
+                        <span class="text-muted small">
+                            <i class="bi bi-rulers"></i> {{ user.peso }}kg / {{ user.altura }}cm
+                        </span>
+                    </div>
+                    
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="badge bg-info">
+                            <i class="bi bi-bullseye"></i> {{ user.get_objetivo_display }}
+                        </span>
+                        <span class="badge bg-success">
+                            <i class="bi bi-bar-chart"></i> {{ user.get_nivel_display }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-footer bg-transparent border-top-0">
+                <div class="d-flex gap-2">
+                    <a href="{% url 'recommendation:home' %}" class="btn btn-sm btn-primary flex-fill">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                    <a href="{% url 'recommendation:profile' %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye"></i> Ver
+                    </a>
+                    <a href="{% url 'recommendation:profile_edit' %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            <strong>Nenhum usuário cadastrado.</strong> 
+            Clique em "Novo Usuário" para adicionar o primeiro usuário ao sistema.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
