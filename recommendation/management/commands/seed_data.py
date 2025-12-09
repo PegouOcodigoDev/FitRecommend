@@ -19,7 +19,6 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR('❌ Tabelas não existem. Execute "python manage.py migrate" primeiro.'))
             return
         
-        self._clear_data()
         self._create_workouts()
         self._integrate_wger_workouts()
         
@@ -30,23 +29,12 @@ class Command(BaseCommand):
         table_names = connection.introspection.table_names()
         return 'treinos' in table_names
     
-    def _clear_data(self):
-        """Remove dados existentes para evitar duplicação.
-        
-        Limpa todos os treinos do banco de dados antes de popular
-        com novos dados.
-        """
-        self.stdout.write('🗑️  Limpando dados existentes...')
-        try:
-            Workout.objects.all().delete()
-        except Exception:
-            pass
-    
     def _create_workouts(self):
         """Cria treinos de exemplo com diferentes intensidades.
         
         Cria 8 treinos pré-definidos cobrindo baixa, média e alta
-        intensidade para demonstração do sistema.
+        intensidade para demonstração do sistema. Insere apenas se
+        o treino não existir no banco de dados.
         """
         self.stdout.write('💪 Criando treinos...')
         
@@ -110,8 +98,14 @@ class Command(BaseCommand):
         ]
         
         for data in workouts_data:
-            Workout.objects.create(**data)
-            self.stdout.write(f'  ✓ Treino criado: {data["nome"]}')
+            workout, created = Workout.objects.get_or_create(
+                nome=data['nome'],
+                defaults=data
+            )
+            if created:
+                self.stdout.write(f'  ✓ Treino criado: {data["nome"]}')
+            else:
+                self.stdout.write(f'  ⊙ Treino já existe: {data["nome"]}')
     
     def _integrate_wger_workouts(self):
         """Integra treinos da API Wger ao banco de dados.
