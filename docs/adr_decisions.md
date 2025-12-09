@@ -132,50 +132,6 @@ Implementar o padrão **Repository** como camada de abstração sobre o ORM do D
 
 ---
 
-## ADR-006: Uso de Django como Framework Base
-
-### Contexto
-
-Necessidade de escolher um framework web Python robusto para desenvolvimento rápido e com boas práticas estabelecidas.
-
-### Decisão
-
-Utilizar **Django** como framework web principal.
-
-### Justificativa
-
-- **Batteries Included**: ORM, admin, autenticação prontos
-- **MTV/MVC**: Estrutura que facilita aplicação de padrões
-- **Maturidade**: Framework estável e amplamente utilizado
-- **Documentação**: Excelente documentação oficial
-- **Comunidade**: Grande comunidade e ecossistema
-- **Segurança**: Proteções built-in contra vulnerabilidades comuns
-- **Produtividade**: Desenvolvimento rápido de protótipos e MVPs
-
-### Alternativas Consideradas
-
-- **Flask**: Mais leve mas requer mais configuração
-- **FastAPI**: Excelente para APIs mas menos adequado para templates HTML
-
-### Consequências
-
-**Positivas**:
-- Desenvolvimento rápido
-- Admin panel gratuito
-- ORM poderoso
-- Sistema de templates robusto
-- Middleware e segurança
-
-**Negativas**:
-- Pode ser "pesado" para projetos muito simples
-- Estrutura opinionada (menos flexibilidade)
-- Performance inferior a frameworks assíncronos em alguns casos
-
-### Status
-
-✅ **Aceito e Implementado**
-
-
 ## ADR-004: Arquitetura MVC Adaptada ao Django
 
 ### Contexto
