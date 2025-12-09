@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Treinos Disponíveis - FitRecommend{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-trophy-fill"></i> Treinos Disponíveis</h1>
+    <p class="lead text-muted">Explore os treinos disponíveis no sistema</p>
+</div>
+
+<div class="row">
+    {% for workout in workouts %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h5 class="card-title mb-0">{{ workout.nome }}</h5>
+                    {% if workout.intensidade == 'baixa' %}
+                        <span class="badge bg-success">{{ workout.get_intensidade_display }}</span>
+                    {% elif workout.intensidade == 'media' %}
+                        <span class="badge bg-warning">{{ workout.get_intensidade_display }}</span>
+                    {% else %}
+                        <span class="badge bg-danger">{{ workout.get_intensidade_display }}</span>
+                    {% endif %}
+                </div>
+                
+                <p class="card-text text-muted small">{{ workout.descricao|truncatewords:20 }}</p>
+                
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                        <i class="bi bi-clock text-primary"></i> {{ workout.duracao_minutos }} min
+                    </div>
+                    <div>
+                        <i class="bi bi-fire text-danger"></i> {{ workout.calorias_estimadas }} kcal
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-footer bg-transparent border-top-0">
+                <a href="{% url 'recommendation:workout_detail' workout.id %}" class="btn btn-sm btn-primary w-100">
+                    <i class="bi bi-eye"></i> Ver Detalhes
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            <strong>Nenhum treino cadastrado.</strong> 
+            Execute o comando seed_data para popular o sistema com treinos padrão.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
